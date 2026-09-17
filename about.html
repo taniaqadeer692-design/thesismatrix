@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - ThesisMatrix</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #030712; color: #f8fafc; overflow-y: auto !important; }
+        .cyber-card { 
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(49, 27, 95, 0.85)); 
+            border: 1px solid rgba(129, 140, 248, 0.25); 
+            box-shadow: 0 25px 30px -10px rgba(0, 0, 0, 0.6); 
+        }
+        .glow-orb {
+            position: fixed; top: 10%; right: 10%; width: 400px; height: 400px;
+            background: rgba(99, 102, 241, 0.15); filter: blur(100px); border-radius: 50%; pointer-events: none; z-index: 0;
+        }
+    </style>
+</head>
+<body class="font-sans min-h-screen flex flex-col px-4 md:px-12 py-8 relative">
+
+    <div class="glow-orb"></div>
+
+    <!-- Navbar -->
+    <nav class="max-w-4xl w-full mx-auto bg-slate-900/80 backdrop-blur border border-slate-800 py-4 px-6 rounded-2xl flex justify-between items-center relative z-10 mb-12 shadow-lg">
+        <div class="text-xl font-black text-purple-400 tracking-wide">ThesisMatrix</div>
+        <div class="space-x-4 text-xs font-semibold">
+            <a href="index.html" class="text-slate-300 hover:text-white transition">Home</a>
+            <a href="signup.html" class="text-slate-300 hover:text-white transition">Sign Up</a>
+            <a href="about.html" class="text-purple-400">About Us</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-4xl w-full mx-auto relative z-10 space-y-8 pb-16">
+        <div class="text-center mb-10">
+            <span class="text-xs font-bold uppercase tracking-widest text-purple-300 bg-purple-500/15 px-3 py-1 rounded-full border border-purple-500/30">Our Vision</span>
+            <h1 class="text-3xl md:text-5xl font-black tracking-tight text-white mt-3">About ThesisMatrix</h1>
+            <p class="text-slate-400 text-sm mt-2">Empowering university students to secure unique Final Year Projects with complete privacy.</p>
+        </div>
+
+        <div class="cyber-card p-8 md:p-10 rounded-3xl space-y-4">
+            <h2 class="text-2xl font-bold text-white">Why ThesisMatrix?</h2>
+            <p class="text-slate-300 text-sm leading-relaxed">
+                Finding a unique, high-impact Final Year Project (FYP) or Thesis topic can be overwhelming. Moreover, students constantly worry about duplication—where two teams choose the exact same idea. 
+            </p>
+            <p class="text-slate-300 text-sm leading-relaxed">
+                <strong>ThesisMatrix</strong> solves this by offering tailored academic concepts across all university faculties, complete with AI prompts and roadmaps, backed by an exclusive <strong>100% Privacy Lock Guarantee</strong>.
+            </p>
+        </div>
+
+        <!-- Founder Section -->
+        <div class="bg-gradient-to-r from-purple-900/60 to-indigo-900/60 border border-indigo-500/30 p-8 rounded-3xl shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+                <span class="text-xs font-bold uppercase tracking-widest text-purple-300 bg-purple-500/20 px-3 py-1 rounded-full border border-purple-500/30">Meet the Creator</span>
+                <h2 class="text-2xl md:text-3xl font-black text-white mt-3">Built by Tania Qadeer</h2>
+                <p class="mt-2 text-slate-300 text-xs md:text-sm leading-relaxed">
+                    ThesisMatrix was conceptualized and developed by Tania Qadeer, a passionate student developer dedicated to solving real academic challenges through smart full-stack web solutions and clean code.
+                </p>
+            </div>
+            <div class="shrink-0">
+                <div class="w-28 h-28 bg-purple-600/30 rounded-full flex items-center justify-center border-4 border-purple-500/40 text-white font-black text-2xl shadow-inner">
+                    TQ
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="max-w-4xl w-full mx-auto text-center text-slate-500 text-xs py-6 relative z-10">
+        &copy; 2026 ThesisMatrix. Founded by Tania Qadeer. All rights reserved.
+    </footer>
+</body>
+</html>

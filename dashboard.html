@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - ThesisMatrix</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Supabase Library & Connection Bridge -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase.js"></script>
+    <style>
+        body { background-color: #030712; color: #f8fafc; overflow-y: auto !important; }
+        .cyber-card { background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(49, 27, 95, 0.85)); border: 1px solid rgba(129, 140, 248, 0.25); box-shadow: 0 25px 30px -10px rgba(0, 0, 0, 0.6); }
+        .glow-orb { position: fixed; top: 10%; right: 10%; width: 400px; height: 400px; background: rgba(99, 102, 241, 0.15); filter: blur(100px); border-radius: 50%; pointer-events: none; z-index: 0; }
+        .idea-box { background-color: #020617; border: 1px solid #1e293b; transition: all 0.3s ease; }
+        .idea-box:hover { border-color: #818cf8; box-shadow: 0 0 20px rgba(129, 140, 248, 0.2); }
+        .cyber-btn { background: linear-gradient(135deg, #7c3aed, #4f46e5); transition: all 0.3s ease; }
+        .cyber-btn:hover { background: linear-gradient(135deg, #6d28d9, #4338ca); box-shadow: 0 0 25px rgba(124, 58, 237, 0.6); }
+        .details-btn { background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(129, 140, 248, 0.3); color: #a5b4fc; transition: all 0.3s ease; }
+        .details-btn:hover { background: rgba(99, 102, 241, 0.3); color: #fff; }
+        .lock-btn { background: linear-gradient(135deg, #059669, #047857); transition: all 0.3s ease; }
+        .lock-btn:hover { box-shadow: 0 0 15px rgba(5, 150, 105, 0.5); }
+    </style>
+</head>
+<body class="font-sans min-h-screen flex flex-col px-4 md:px-12 py-8 relative">
+    <div class="glow-orb"></div>
+    <nav class="max-w-6xl w-full mx-auto bg-slate-900/80 backdrop-blur border border-slate-800 py-4 px-6 rounded-2xl flex justify-between items-center relative z-10 mb-8 shadow-lg">
+        <div class="text-xl font-black text-purple-400 tracking-wide">ThesisMatrix <span class="text-xs text-slate-400 font-normal">| Dashboard</span></div>
+        <div class="flex items-center gap-4">
+            <span id="userDeptBadge" class="text-xs bg-indigo-500/20 text-indigo-300 px-3 py-1.5 rounded-full border border-indigo-500/30 hidden md:inline-block">Loading Department...</span>
+            <a href="fields.html" class="text-xs text-slate-300 hover:text-white bg-slate-800 px-3 py-2 rounded-xl border border-slate-700 transition">Change Dept</a>
+            <a href="index.html" class="text-xs text-red-400 hover:text-red-300 bg-red-500/10 px-3 py-2 rounded-xl border border-red-500/20 transition">Log Out</a>
+        </div>
+    </nav>
+    <div class="max-w-6xl w-full mx-auto relative z-10 space-y-8 pb-16">
+        <div class="cyber-card p-8 rounded-3xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+            <div>
+                <span class="text-xs font-bold uppercase tracking-widest text-purple-300 bg-purple-500/15 px-3 py-1 rounded-full border border-purple-500/30">AI Academic Hub</span>
+                <h1 id="welcomeTitle" class="text-2xl md:text-4xl font-black text-white mt-3 tracking-tight">Welcome back, Student! 👋</h1>
+                <p class="text-slate-400 text-xs md:text-sm mt-1">Explore verified Final Year Project concepts tailored for your department, or generate your own.</p>
+            </div>
+            <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl text-center shrink-0">
+                <p class="text-xs text-slate-400">Locked Projects</p>
+                <p id="lockedCount" class="text-2xl font-black text-emerald-400 mt-0.5">0</p>
+            </div>
+        </div>
+        <div class="cyber-card p-6 md:p-8 rounded-3xl">
+            <h3 class="text-lg font-bold text-white mb-2">✨ Custom AI Idea Generator & Voice Input</h3>
+            <p class="text-slate-400 text-xs mb-4">Type your thoughts or use the Voice button to speak your project domain, and generate a custom tailored FYP concept.</p>
+            <div class="flex flex-col md:flex-row gap-3">
+                <input type="text" id="userThoughtInput" placeholder="e.g., I want to build a Flutter app using AI for healthcare tracking..." class="flex-1 px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:ring-2 focus:ring-purple-500 outline-none">
+                <button onclick="startVoiceInput()" type="button" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-3 rounded-xl font-bold text-xs border border-slate-700 transition flex items-center justify-center gap-1.5 shrink-0" title="Click to speak thoughts">🎤 Speak</button>
+                <button onclick="generateCustomIdea()" class="cyber-btn text-white px-6 py-3 rounded-xl font-bold text-sm shadow-lg shrink-0">Generate Concept</button>
+            </div>
+        </div>
+        <div>
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-black text-white tracking-tight">Recommended FYP Concepts</h3>
+                <span class="text-xs text-slate-400">Exclusive 100% Privacy Lock Guarantee</span>
+            </div>
+            <div id="ideasGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="idea-box p-6 rounded-2xl flex flex-col justify-between" data-title="AI-Powered Smart Resume & ATS Matcher" data-desc="An advanced platform that evaluates resumes against job descriptions using NLP and gives real-time improvement suggestions." data-tech="Python, React, NLP, Tailwind CSS" data-benefits="Helps job seekers optimize resumes instantly; High commercial demand; Great portfolio showcase." data-roadmap="1. Build Resume parser using Python/NLTK. 2. Create React frontend for users. 3. Integrate scoring algorithm and deploy.">
+                    <div>
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-[10px] bg-purple-500/20 text-purple-300 px-2.5 py-1 rounded-md font-bold uppercase border border-purple-500/30">AI & Web Tech</span>
+                            <span class="text-xs text-emerald-400 font-semibold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Available</span>
+                        </div>
+                        <h4 class="text-lg font-bold text-white mb-2">AI-Powered Smart Resume & ATS Matcher</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-4">An advanced platform that evaluates resumes against job descriptions using NLP and gives real-time improvement suggestions.</p>
+                    </div>
+                    <div class="pt-4 border-t border-slate-800 flex justify-between items-center">
+                        <button onclick="openDetailsModal(this)" class="details-btn text-xs px-3.5 py-2 rounded-xl font-bold transition">📖 View Details & Roadmap</button>
+                        <div class="flex gap-2">
+                            <button onclick="copyPrompt(this)" class="bg-slate-800 text-slate-300 hover:bg-slate-700 text-xs px-3 py-2 rounded-xl font-bold transition" title="Copy AI Prompt">📋 Copy</button>
+                            <button onclick="lockIdea(this, 'AI-Powered Smart Resume & ATS Matcher')" class="lock-btn text-white text-xs px-4 py-2 rounded-xl font-bold shadow transition">🔒 Lock</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="idea-box p-6 rounded-2xl flex flex-col justify-between" data-title="Decentralized Academic Credential Verification" data-desc="A blockchain-based system for universities to issue tamper-proof digital degrees and transcripts for graduates." data-tech="Solidity, Node.js, Web3.js, Ethereum" data-benefits="Eliminates fake degrees; Highly secure and verifiable globally; Strong academic thesis value." data-roadmap="1. Write smart contracts in Solidity. 2. Build Node.js backend to interact with blockchain. 3. Develop university admin portal.">
+                    <div>
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-[10px] bg-indigo-500/20 text-indigo-300 px-2.5 py-1 rounded-md font-bold uppercase border border-indigo-500/30">Cloud & Security</span>
+                            <span class="text-xs text-emerald-400 font-semibold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Available</span>
+                        </div>
+                        <h4 class="text-lg font-bold text-white mb-2">Decentralized Academic Credential Verification</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-4">A blockchain-based system for universities to issue tamper-proof digital degrees and transcripts for graduates.</p>
+                    </div>
+                    <div class="pt-4 border-t border-slate-800 flex justify-between items-center">
+                        <button onclick="openDetailsModal(this)" class="details-btn text-xs px-3.5 py-2 rounded-xl font-bold transition">📖 View Details & Roadmap</button>
+                        <div class="flex gap-2">
+                            <button onclick="copyPrompt(this)" class="bg-slate-800 text-slate-300 hover:bg-slate-700 text-xs px-3 py-2 rounded-xl font-bold transition" title="Copy AI Prompt">📋 Copy</button>
+                            <button onclick="lockIdea(this, 'Decentralized Academic Credential Verification')" class="lock-btn text-white text-xs px-4 py-2 rounded-xl font-bold shadow transition">🔒 Lock</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="detailsModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center z-50 px-4">
+        <div class="bg-slate-900 border border-slate-700 p-8 rounded-3xl shadow-2xl max-w-lg w-full relative text-slate-100">
+            <button onclick="closeDetailsModal()" class="absolute top-6 right-6 text-slate-400 hover:text-white font-bold text-lg">✕</button>
+            <span class="text-[10px] bg-purple-500/20 text-purple-300 px-2.5 py-1 rounded-md font-bold uppercase border border-purple-500/30">Project Analysis</span>
+            <h2 id="modalTitle" class="text-xl font-black text-white mt-3 mb-2">Project Title</h2>
+            <p id="modalDesc" class="text-xs text-slate-300 leading-relaxed mb-4">Description here...</p>
+            <div class="space-y-3 mb-6 bg-slate-950 p-4 rounded-2xl border border-slate-800 text-xs">
+                <div><strong class="text-purple-400">Tech Stack:</strong> <span id="modalTech" class="text-slate-300"></span></div>
+                <div><strong class="text-emerald-400">Key Benefits:</strong> <span id="modalBenefits" class="text-slate-300"></span></div>
+                <div><strong class="text-indigo-400">Implementation Roadmap:</strong> <span id="modalRoadmap" class="text-slate-300"></span></div>
+            </div>
+            <div class="flex justify-end gap-3">
+                <button onclick="closeDetailsModal()" class="bg-slate-800 text-slate-300 px-4 py-2 rounded-xl text-xs font-bold hover:bg-slate-700 transition">Close</button>
+                <button id="modalLockBtn" onclick="" class="lock-btn text-white text-xs px-5 py-2 rounded-xl font-bold shadow transition">🔒 Confirm & Lock</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const userName = localStorage.getItem('userName') || 'Student';
+        const userDept = localStorage.getItem('userDepartment') || 'General Studies';
+        document.getElementById('welcomeTitle').innerText = `Welcome back, ${userName}! 👋`;
+        document.getElementById('userDeptBadge').innerText = `Department: ${userDept}`;
+        let lockedCounter = parseInt(localStorage.getItem('lockedCount') || '0');
+        document.getElementById('lockedCount').innerText = lockedCounter;
+
+        function openDetailsModal(buttonEl) {
+            const card = buttonEl.closest('.idea-box');
+            const title = card.getAttribute('data-title');
+            const desc = card.getAttribute('data-desc');
+            const tech = card.getAttribute('data-tech');
+            const benefits = card.getAttribute('data-benefits');
+            const roadmap = card.getAttribute('data-roadmap');
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalDesc').innerText = desc;
+            document.getElementById('modalTech').innerText = tech;
+            document.getElementById('modalBenefits').innerText = benefits;
+            document.getElementById('modalRoadmap').innerText = roadmap;
+            const modalLockBtn = document.getElementById('modalLockBtn');
+            modalLockBtn.onclick = function() {
+                closeDetailsModal();
+                const cardBtn = card.querySelector('.lock-btn');
+                lockIdea(cardBtn, title);
+            };
+            const modal = document.getElementById('detailsModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+        function closeDetailsModal() {
+            const modal = document.getElementById('detailsModal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+        function copyPrompt(buttonEl) {
+            const card = buttonEl.closest('.idea-box');
+            const title = card.getAttribute('data-title');
+            const desc = card.getAttribute('data-desc');
+            const promptText = `Act as an expert software architect. Help me design and write code for a Final Year Project titled "${title}". Description: ${desc}`;
+            navigator.clipboard.writeText(promptText).then(() => { alert('AI Prompt copied to clipboard!'); });
+        }
+        function startVoiceInput() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) { alert('Speech recognition is not supported.'); return; }
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'en-US';
+            alert('Listening... Speak your project thoughts now.');
+            recognition.onresult = function(event) {
+                const speechToText = event.results[0][0].transcript;
+                document.getElementById('userThoughtInput').value = speechToText;
+                alert(`Captured speech: "${speechToText}"`);
+            };
+            recognition.start();
+        }
+        async function lockIdea(buttonElement, ideaTitle) {
+            if(buttonElement.classList.contains('locked')) { alert('You have already locked this project!'); return; }
+            const confirmLock = confirm(`Are you sure you want to lock "${ideaTitle}"?`);
+            if(!confirmLock) return;
+
+            try {
+                const { data: { user } } = await _supabase.auth.getUser();
+                if (user) {
+                    await _supabase.from('locked_ideas').insert([{
+                        user_name: userName,
+                        idea_title: ideaTitle,
+                        department: userDept
+                    }]);
+                }
+            } catch (err) { console.error('Database lock error:', err); }
+
+            buttonElement.classList.add('locked');
+            buttonElement.innerText = '🛡️ Locked';
+            buttonElement.style.background = '#475569';
+            buttonElement.style.cursor = 'not-allowed';
+            lockedCounter++;
+            localStorage.setItem('lockedCount', lockedCounter);
+            document.getElementById('lockedCount').innerText = lockedCounter;
+            alert('Success! Your FYP idea is now securely locked in the database.');
+        }
+        function generateCustomIdea() {
+            const thought = document.getElementById('userThoughtInput').value;
+            if(!thought.trim()) { alert('Please type or speak your thoughts first!'); return; }
+            const grid = document.getElementById('ideasGrid');
+            const newCard = document.createElement('div');
+            newCard.className = 'idea-box p-6 rounded-2xl flex flex-col justify-between border-purple-500/50';
+            newCard.setAttribute('data-title', `Custom FYP: ${thought}`);
+            newCard.setAttribute('data-desc', `Tailored concept based on your personal thoughts: "${thought}".`);
+            newCard.setAttribute('data-tech', 'Full-Stack / Modern Tech Stack');
+            newCard.setAttribute('data-benefits', 'Highly personalized; Strong defense potential.');
+            newCard.setAttribute('data-roadmap', '1. Requirements. 2. Prototype. 3. Deploy.');
+            newCard.innerHTML = `
+                <div>
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="text-[10px] bg-amber-500/20 text-amber-300 px-2.5 py-1 rounded-md font-bold uppercase border border-amber-500/30">Custom</span>
+                        <span class="text-xs text-emerald-400 font-semibold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Available</span>
+                    </div>
+                    <h4 class="text-lg font-bold text-white mb-2">Custom FYP: ${thought}</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed mb-4">Tailored concept based on your thoughts.</p>
+                </div>
+                <div class="pt-4 border-t border-slate-800 flex justify-between items-center">
+                    <button onclick="openDetailsModal(this)" class="details-btn text-xs px-3.5 py-2 rounded-xl font-bold transition">📖 View Details</button>
+                    <div class="flex gap-2">
+                        <button onclick="copyPrompt(this)" class="bg-slate-800 text-slate-300 text-xs px-3 py-2 rounded-xl font-bold transition">📋 Copy</button>
+                        <button onclick="lockIdea(this, 'Custom FYP: ${thought}')" class="lock-btn text-white text-xs px-4 py-2 rounded-xl font-bold shadow transition">🔒 Lock</button>
+                    </div>
+                </div>
+            `;
+            grid.prepend(newCard);
+            document.getElementById('userThoughtInput').value = '';
+            alert('Custom FYP concept generated!');
+        }
+    </script>
+</body>
+</html>

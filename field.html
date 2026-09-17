@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Department - ThesisMatrix</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Supabase Library & Connection Bridge -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase.js"></script>
+
+    <style>
+        body { background-color: #030712; color: #f8fafc; overflow-y: auto !important; }
+        .cyber-card { background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(49, 27, 95, 0.85)); border: 1px solid rgba(129, 140, 248, 0.25); box-shadow: 0 25px 30px -10px rgba(0, 0, 0, 0.6); }
+        .glow-orb-1 { position: fixed; top: 5%; left: 15%; width: 350px; height: 350px; background: rgba(99, 102, 241, 0.22); filter: blur(90px); border-radius: 50%; pointer-events: none; z-index: 0; }
+        .glow-orb-2 { position: fixed; bottom: 5%; right: 15%; width: 350px; height: 350px; background: rgba(168, 85, 247, 0.2); filter: blur(90px); border-radius: 50%; pointer-events: none; z-index: 0; }
+        .field-box { background-color: #020617; border: 1px solid #1e293b; transition: all 0.3s ease; }
+        .field-box:hover { border-color: #818cf8; transform: translateY(-3px); box-shadow: 0 0 20px rgba(129, 140, 248, 0.3); }
+        .cyber-btn { background: linear-gradient(135deg, #7c3aed, #4f46e5); transition: all 0.3s ease; }
+        .cyber-btn:hover { background: linear-gradient(135deg, #6d28d9, #4338ca); box-shadow: 0 0 25px rgba(124, 58, 237, 0.6); }
+    </style>
+</head>
+<body class="font-sans min-h-screen flex flex-col items-center justify-start px-4 relative py-12">
+    <div class="glow-orb-1"></div><div class="glow-orb-2"></div>
+    <div class="max-w-4xl w-full relative z-10 text-center mb-8">
+        <span class="text-xs font-bold uppercase tracking-widest text-purple-300 bg-purple-500/15 px-3.5 py-1.5 rounded-full border border-purple-500/30">University Faculty Selection</span>
+        <h1 class="text-3xl md:text-5xl font-black text-white mt-4 tracking-tight">Select Your Department</h1>
+        <p class="text-slate-400 text-xs md:text-sm mt-2">Choose your specific academic department to get tailored Thesis & FYP concepts.</p>
+    </div>
+    <div class="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10 mb-8">
+        <div onclick="selectField('Information Technology')" class="field-box p-5 rounded-2xl cursor-pointer flex items-center gap-4 group">
+            <div class="w-12 h-12 rounded-xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-300 font-bold text-xl shrink-0">🌐</div>
+            <div class="text-left"><h3 class="font-bold text-white text-sm group-hover:text-indigo-300 transition">Information Technology (IT)</h3><p class="text-slate-400 text-xs mt-0.5">Web Tech, Cloud, Systems & Applications</p></div>
+        </div>
+        <div onclick="selectField('Computer Science')" class="field-box p-5 rounded-2xl cursor-pointer flex items-center gap-4 group">
+            <div class="w-12 h-12 rounded-xl bg-purple-500/20 border border-purple-500/30 flex items-center justify-center text-purple-300 font-bold text-xl shrink-0">💻</div>
+            <div class="text-left"><h3 class="font-bold text-white text-sm group-hover:text-purple-300 transition">Computer Science</h3><p class="text-slate-400 text-xs mt-0.5">Algorithms, Core Computing & Architecture</p></div>
+        </div>
+        <div onclick="selectField('Software Engineering')" class="field-box p-5 rounded-2xl cursor-pointer flex items-center gap-4 group">
+            <div class="w-12 h-12 rounded-xl bg-blue-500/20 border border-blue-500/30 flex items-center justify-center text-blue-300 font-bold text-xl shrink-0">⚙️</div>
+            <div class="text-left"><h3 class="font-bold text-white text-sm group-hover:text-blue-300 transition">Software Engineering</h3><p class="text-slate-400 text-xs mt-0.5">Full-Stack, QA, DevOps & Lifecycle Models</p></div>
+        </div>
+        <div onclick="selectField('Artificial Intelligence & Data Science')" class="field-box p-5 rounded-2xl cursor-pointer flex items-center gap-4 group">
+            <div class="w-12 h-12 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-300 font-bold text-xl shrink-0">🤖</div>
+            <div class="text-left"><h3 class="font-bold text-white text-sm group-hover:text-emerald-300 transition">Artificial Intelligence & Data Science</h3><p class="text-slate-400 text-xs mt-0.5">Machine Learning, Neural Networks & Big Data</p></div>
+        </div>
+        <div onclick="selectField('Cyber Security & Information Security')" class="field-box p-5 rounded-2xl cursor-pointer flex items-center gap-4 group">
+            <div class="w-12 h-12 rounded-xl bg-red-500/20 border border-red-500/30 flex items-center justify-center text-red-300 font-bold text-xl shrink-0">🛡️</div>
+            <div class="text-left"><h3 class="font-bold text-white text-sm group-hover:text-red-300 transition">Cyber & Information Security</h3><p class="text-slate-400 text-xs mt-0.5">Ethical Hacking, Cryptography & Forensics</p></div>
+        </div>
+        <div onclick="selectField('Electrical & Computer Engineering')" class="field-box p-5 rounded-2xl cursor-pointer flex items-center gap-4 group">
+            <div class="w-12 h-12 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-300 font-bold text-xl shrink-0">⚡</div>
+            <div class="text-left"><h3 class="font-bold text-white text-sm group-hover:text-amber-300 transition">Electrical & Computer Engineering</h3><p class="text-slate-400 text-xs mt-0.5">IoT, Embedded Systems, Circuits & Robotics</p></div>
+        </div>
+        <div onclick="selectField('Science Faculty (Chemistry & Botany)')" class="field-box p-5 rounded-2xl cursor-pointer flex items-center gap-4 group">
+            <div class="w-12 h-12 rounded-xl bg-teal-500/20 border border-teal-500/30 flex items-center justify-center text-teal-300 font-bold text-xl shrink-0">🌿</div>
+            <div class="text-left"><h3 class="font-bold text-white text-sm group-hover:text-teal-300 transition">Science (Chemistry & Botany)</h3><p class="text-slate-400 text-xs mt-0.5">Biochem, Plant Sciences, Lab Research & Analysis</p></div>
+        </div>
+        <div onclick="selectField('Agriculture')" class="field-box p-5 rounded-2xl cursor-pointer flex items-center gap-4 group">
+            <div class="w-12 h-12 rounded-xl bg-lime-500/20 border border-lime-500/30 flex items-center justify-center text-lime-300 font-bold text-xl shrink-0">🌾</div>
+            <div class="text-left"><h3 class="font-bold text-white text-sm group-hover:text-lime-300 transition">Agriculture</h3><p class="text-slate-400 text-xs mt-0.5">Agri-Tech, Crop Sciences & Smart Farming</p></div>
+        </div>
+        <div onclick="selectField('Business Administration (BBA/MBA)')" class="field-box p-5 rounded-2xl cursor-pointer flex items-center gap-4 group">
+            <div class="w-12 h-12 rounded-xl bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center text-cyan-300 font-bold text-xl shrink-0">📊</div>
+            <div class="text-left"><h3 class="font-bold text-white text-sm group-hover:text-cyan-300 transition">Business Administration</h3><p class="text-slate-400 text-xs mt-0.5">Fintech, Management, Marketing & Analytics</p></div>
+        </div>
+        <div onclick="selectField('Economics & Commerce')" class="field-box p-5 rounded-2xl cursor-pointer flex items-center gap-4 group">
+            <div class="w-12 h-12 rounded-xl bg-yellow-500/20 border border-yellow-500/30 flex items-center justify-center text-yellow-300 font-bold text-xl shrink-0">🪙</div>
+            <div class="text-left"><h3 class="font-bold text-white text-sm group-hover:text-yellow-300 transition">Economics & Commerce</h3><p class="text-slate-400 text-xs mt-0.5">Market Trends, Financial Modeling & Trade</p></div>
+        </div>
+        <div onclick="selectField('English Literature & Linguistics')" class="field-box p-5 rounded-2xl cursor-pointer flex items-center gap-4 group">
+            <div class="w-12 h-12 rounded-xl bg-pink-500/20 border border-pink-500/30 flex items-center justify-center text-pink-300 font-bold text-xl shrink-0">📚</div>
+            <div class="text-left"><h3 class="font-bold text-white text-sm group-hover:text-pink-300 transition">English Literature & Linguistics</h3><p class="text-slate-400 text-xs mt-0.5">Digital Humanities, Discourse & NLP Studies</p></div>
+        </div>
+    </div>
+    <div class="max-w-4xl w-full text-center pb-12 relative z-10">
+        <button onclick="proceedToDashboard()" class="cyber-btn text-white px-9 py-4 rounded-xl font-bold text-sm tracking-wide shadow-lg">Continue to Dashboard &rarr;</button>
+    </div>
+    <script>
+        let selectedField = '';
+        function selectField(fieldName) {
+            selectedField = fieldName;
+            document.querySelectorAll('.field-box').forEach(box => {
+                box.style.borderColor = '#1e293b';
+                box.style.background = '#020617';
+            });
+            event.currentTarget.style.borderColor = '#818cf8';
+            event.currentTarget.style.background = 'rgba(79, 70, 229, 0.15)';
+        }
+        async function proceedToDashboard() {
+            if(!selectedField) { alert('Please select your academic department first!'); return; }
+            try {
+                const { data: { user } } = await _supabase.auth.getUser();
+                if (user) {
+                    await _supabase.from('profiles').update({ department: selectedField }).eq('id', user.id);
+                }
+            } catch (err) { console.error(err); }
+            localStorage.setItem('userDepartment', selectedField);
+            window.location.href = 'dashboard.html';
+        }
+    </script>
+</body>
+</html>
