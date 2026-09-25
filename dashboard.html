@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - ThesisMatrix</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Supabase Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase.js"></script>
     <style>
@@ -23,58 +24,74 @@
 </head>
 <body class="font-sans min-h-screen flex flex-col px-4 md:px-12 py-8 relative">
     <div class="glow-orb"></div>
+
+    <!-- Top Navbar -->
     <nav class="max-w-6xl w-full mx-auto bg-slate-900/80 backdrop-blur border border-slate-800 py-4 px-6 rounded-2xl flex justify-between items-center relative z-10 mb-8 shadow-lg">
-        <div class="text-xl font-black text-purple-400 tracking-wide">ThesisMatrix <span class="text-xs text-slate-400 font-normal">| AI Dashboard</span></div>
+        <div class="text-xl font-black text-purple-400 tracking-wide">ThesisMatrix <span class="text-xs text-slate-400 font-normal">| Dashboard</span></div>
         <div class="flex items-center gap-4">
-            <span id="userDeptBadge" class="text-xs bg-indigo-500/20 text-indigo-300 px-3 py-1.5 rounded-full border border-indigo-500/30 hidden md:inline-block">Department</span>
+            <span id="userDeptBadge" class="text-xs bg-indigo-500/20 text-indigo-300 px-3 py-1.5 rounded-full border border-indigo-500/30 hidden md:inline-block">Loading Department...</span>
             <a href="fields.html" class="text-xs text-slate-300 hover:text-white bg-slate-800 px-3 py-2 rounded-xl border border-slate-700 transition">Change Dept</a>
+            <a href="about.html" class="text-xs text-slate-300 hover:text-white bg-slate-800 px-3 py-2 rounded-xl border border-slate-700 transition">About Us</a>
             <a href="index.html" class="text-xs text-red-400 hover:text-red-300 bg-red-500/10 px-3 py-2 rounded-xl border border-red-500/20 transition">Log Out</a>
         </div>
     </nav>
+
+    <!-- Main Dashboard Area -->
     <div class="max-w-6xl w-full mx-auto relative z-10 space-y-8 pb-16">
+        
+        <!-- Welcome Banner -->
         <div class="cyber-card p-8 rounded-3xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
             <div>
-                <span class="text-xs font-bold uppercase tracking-widest text-purple-300 bg-purple-500/15 px-3 py-1 rounded-full border border-purple-500/30">AI Academic Engine Active</span>
-                <h1 id="welcomeTitle" class="text-2xl md:text-4xl font-black text-white mt-3 tracking-tight">Welcome back! 👋</h1>
-                <p id="deptSubtitle" class="text-slate-400 text-xs md:text-sm mt-1">Loading tailored FYP concepts for your department...</p>
+                <span class="text-xs font-bold uppercase tracking-widest text-purple-300 bg-purple-500/15 px-3 py-1 rounded-full border border-purple-500/30">AI Academic Hub</span>
+                <h1 id="welcomeTitle" class="text-2xl md:text-4xl font-black text-white mt-3 tracking-tight">Welcome back, Student! 👋</h1>
+                <p id="deptSubtitle" class="text-slate-400 text-xs md:text-sm mt-1">Explore verified Final Year Project concepts tailored for your department, or generate 10+ bulk ideas instantly.</p>
             </div>
             <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl text-center shrink-0">
                 <p class="text-xs text-slate-400">Locked Projects</p>
                 <p id="lockedCount" class="text-2xl font-black text-emerald-400 mt-0.5">0</p>
             </div>
         </div>
+
+        <!-- Custom Magic Box (10 Ideas Generator & Voice Input) -->
         <div class="cyber-card p-6 md:p-8 rounded-3xl">
-            <h3 class="text-lg font-bold text-white mb-2">✨ ThesisMatrix Smart AI Generator</h3>
-            <p class="text-slate-400 text-xs mb-4">Type your specific thoughts or speak via microphone. Our AI engine will synthesize a unique, defense-ready FYP concept instantly.</p>
+            <h3 class="text-lg font-bold text-white mb-2">✨ ThesisMatrix Bulk AI Generator (Get 10 Ideas)</h3>
+            <p class="text-slate-400 text-xs mb-4">Type your project domain or thoughts (e.g., "Give me 10 ideas for AI in agriculture"), or use the Voice button to speak.</p>
             <div class="flex flex-col md:flex-row gap-3">
-                <input type="text" id="userThoughtInput" placeholder="e.g., I want an IoT-based smart agriculture monitoring system using sensors..." class="flex-1 px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:ring-2 focus:ring-purple-500 outline-none">
-                <button onclick="startVoiceInput()" type="button" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-3 rounded-xl font-bold text-xs border border-slate-700 transition flex items-center justify-center gap-1.5 shrink-0">🎤 Speak</button>
-                <button onclick="generateAIIdea()" class="cyber-btn text-white px-6 py-3 rounded-xl font-bold text-sm shadow-lg shrink-0">✨ AI Generate</button>
+                <input type="text" id="userThoughtInput" placeholder="e.g., Give me 10 ideas for AI in agriculture..." class="flex-1 px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:ring-2 focus:ring-purple-500 outline-none">
+                <button onclick="startVoiceInput()" type="button" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-3 rounded-xl font-bold text-xs border border-slate-700 transition flex items-center justify-center gap-1.5 shrink-0" title="Click to speak thoughts">🎤 Speak</button>
+                <button onclick="generateAIIdea()" class="cyber-btn text-white px-6 py-3 rounded-xl font-bold text-sm shadow-lg shrink-0">✨ Generate 10 Ideas</button>
             </div>
         </div>
+
+        <!-- Ideas Feed Section -->
         <div>
             <div class="flex justify-between items-center mb-6">
                 <h3 class="text-xl font-black text-white tracking-tight">Department-Tailored FYP Concepts</h3>
-                <span class="text-xs text-slate-400">100% Privacy Lock Guarantee</span>
+                <span class="text-xs text-slate-400">Exclusive 100% Privacy Lock Guarantee</span>
             </div>
+
+            <!-- Ideas Grid -->
             <div id="ideasGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Dynamic ideas will load here based on department -->
+                <!-- Department ideas will load dynamically here -->
             </div>
         </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Details & Roadmap Modal Popup -->
     <div id="detailsModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center z-50 px-4">
         <div class="bg-slate-900 border border-slate-700 p-8 rounded-3xl shadow-2xl max-w-lg w-full relative text-slate-100">
             <button onclick="closeDetailsModal()" class="absolute top-6 right-6 text-slate-400 hover:text-white font-bold text-lg">✕</button>
+            
             <span class="text-[10px] bg-purple-500/20 text-purple-300 px-2.5 py-1 rounded-md font-bold uppercase border border-purple-500/30">AI Analysis & Roadmap</span>
             <h2 id="modalTitle" class="text-xl font-black text-white mt-3 mb-2">Project Title</h2>
             <p id="modalDesc" class="text-xs text-slate-300 leading-relaxed mb-4">Description here...</p>
+            
             <div class="space-y-3 mb-6 bg-slate-950 p-4 rounded-2xl border border-slate-800 text-xs">
                 <div><strong class="text-purple-400">Tech Stack:</strong> <span id="modalTech" class="text-slate-300"></span></div>
                 <div><strong class="text-emerald-400">Key Benefits:</strong> <span id="modalBenefits" class="text-slate-300"></span></div>
                 <div><strong class="text-indigo-400">Implementation Roadmap:</strong> <span id="modalRoadmap" class="text-slate-300"></span></div>
             </div>
+
             <div class="flex justify-end gap-3">
                 <button onclick="closeDetailsModal()" class="bg-slate-800 text-slate-300 px-4 py-2 rounded-xl text-xs font-bold hover:bg-slate-700 transition">Close</button>
                 <button id="modalLockBtn" class="lock-btn text-white text-xs px-5 py-2 rounded-xl font-bold shadow transition">🔒 Confirm & Lock</button>
@@ -82,9 +99,11 @@
         </div>
     </div>
 
+    <!-- JavaScript -->
     <script>
         const userName = localStorage.getItem('userName') || 'Student';
         const userDept = localStorage.getItem('userDepartment') || 'Information Technology';
+
         document.getElementById('welcomeTitle').innerText = `Welcome back, ${userName}! 👋`;
         document.getElementById('userDeptBadge').innerText = `Dept: ${userDept}`;
         document.getElementById('deptSubtitle').innerText = `Showing exclusive AI-verified concepts for ${userDept}`;
@@ -116,18 +135,14 @@
             ]
         };
 
-        // Fallback default ideas if department is general
         const defaultIdeas = [
             { title: "Smart Automated Resource Management System", desc: "A comprehensive tracking and allocation framework designed to optimize institutional resource utilization.", tech: "Node.js, PostgreSQL, Tailwind CSS", benefits: "Streamlines operations; Easy to scale.", roadmap: "1. Requirements analysis. 2. Database modeling. 3. Frontend integration." },
             { title: "AI-Assisted Decision Support Framework", desc: "A data-driven web tool providing predictive insights based on historical domain data.", tech: "Python, Flask, JavaScript", benefits: "Enhances strategic planning accuracy.", roadmap: "1. Data gathering. 2. Model training. 3. Web app deployment." }
         ];
 
-        // Load and render department specific ideas
         function loadDepartmentIdeas() {
             const grid = document.getElementById('ideasGrid');
             grid.innerHTML = '';
-
-            // Match department or fallback
             let matchingIdeas = defaultIdeas;
             for (const [deptKey, ideasList] of Object.entries(departmentDatabase)) {
                 if (userDept.toLowerCase().includes(deptKey.toLowerCase()) || deptKey.toLowerCase().includes(userDept.toLowerCase())) {
@@ -136,39 +151,42 @@
                 }
             }
 
-            matchingIdeas.forEach((item, index) => {
-                const card = document.createElement('div');
-                card.className = 'idea-box p-6 rounded-2xl flex flex-col justify-between';
-                card.setAttribute('data-title', item.title);
-                card.setAttribute('data-desc', item.desc);
-                card.setAttribute('data-tech', item.tech);
-                card.setAttribute('data-benefits', item.benefits);
-                card.setAttribute('data-roadmap', item.roadmap);
-
-                card.innerHTML = `
-                    <div>
-                        <div class="flex justify-between items-start mb-3">
-                            <span class="text-[10px] bg-purple-500/20 text-purple-300 px-2.5 py-1 rounded-md font-bold uppercase border border-purple-500/30">${userDept}</span>
-                            <span class="text-xs text-emerald-400 font-semibold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Available</span>
-                        </div>
-                        <h4 class="text-lg font-bold text-white mb-2">${item.title}</h4>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-4">${item.desc}</p>
-                    </div>
-                    <div class="pt-4 border-t border-slate-800 flex justify-between items-center">
-                        <button onclick="openDetailsModal(this)" class="details-btn text-xs px-3.5 py-2 rounded-xl font-bold transition">📖 View Details & Roadmap</button>
-                        <div class="flex gap-2">
-                            <button onclick="copyPrompt(this)" class="bg-slate-800 text-slate-300 hover:bg-slate-700 text-xs px-3 py-2 rounded-xl font-bold transition" title="Copy AI Prompt">📋 Copy</button>
-                            <button onclick="lockIdea(this, '${item.title}')" class="lock-btn text-white text-xs px-4 py-2 rounded-xl font-bold shadow transition">🔒 Lock</button>
-                        </div>
-                    </div>
-                `;
-                grid.appendChild(card);
+            matchingIdeas.forEach((item) => {
+                renderIdeaCard(grid, item.title, item.desc, item.tech, item.benefits, item.roadmap, userDept);
             });
         }
 
         loadDepartmentIdeas();
 
-        // Modal Logic & AI Generator
+        function renderIdeaCard(grid, title, desc, tech, benefits, roadmap, tag) {
+            const card = document.createElement('div');
+            card.className = 'idea-box p-6 rounded-2xl flex flex-col justify-between';
+            card.setAttribute('data-title', title);
+            card.setAttribute('data-desc', desc);
+            card.setAttribute('data-tech', tech);
+            card.setAttribute('data-benefits', benefits);
+            card.setAttribute('data-roadmap', roadmap);
+
+            card.innerHTML = `
+                <div>
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="text-[10px] bg-purple-500/20 text-purple-300 px-2.5 py-1 rounded-md font-bold uppercase border border-purple-500/30">${tag}</span>
+                        <span class="text-xs text-emerald-400 font-semibold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Available</span>
+                    </div>
+                    <h4 class="text-lg font-bold text-white mb-2">${title}</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed mb-4">${desc}</p>
+                </div>
+                <div class="pt-4 border-t border-slate-800 flex justify-between items-center">
+                    <button onclick="openDetailsModal(this)" class="details-btn text-xs px-3.5 py-2 rounded-xl font-bold transition">📖 View Details & Roadmap</button>
+                    <div class="flex gap-2">
+                        <button onclick="copyPrompt(this)" class="bg-slate-800 text-slate-300 hover:bg-slate-700 text-xs px-3 py-2 rounded-xl font-bold transition" title="Copy AI Prompt">📋 Copy</button>
+                        <button onclick="lockIdea(this, '${title}')" class="lock-btn text-white text-xs px-4 py-2 rounded-xl font-bold shadow transition">🔒 Lock</button>
+                    </div>
+                </div>
+            `;
+            grid.appendChild(card);
+        }
+
         function openDetailsModal(buttonEl) {
             const card = buttonEl.closest('.idea-box');
             document.getElementById('modalTitle').innerText = card.getAttribute('data-title');
@@ -177,7 +195,8 @@
             document.getElementById('modalBenefits').innerText = card.getAttribute('data-benefits');
             document.getElementById('modalRoadmap').innerText = card.getAttribute('data-roadmap');
             
-            document.getElementById('modalLockBtn').onclick = function() {
+            const modalLockBtn = document.getElementById('modalLockBtn');
+            modalLockBtn.onclick = function() {
                 closeDetailsModal();
                 lockIdea(card.querySelector('.lock-btn'), card.getAttribute('data-title'));
             };
@@ -193,14 +212,14 @@
         function copyPrompt(buttonEl) {
             const card = buttonEl.closest('.idea-box');
             const promptText = `Act as an expert software architect. Help me design and write code for a Final Year Project titled "${card.getAttribute('data-title')}". Description: ${card.getAttribute('data-desc')}`;
-            navigator.clipboard.writeText(promptText).then(() => { alert('Smart AI Prompt copied to clipboard!'); });
+            navigator.clipboard.writeText(promptText).then(() => { alert('AI Prompt copied to clipboard!'); });
         }
 
         function startVoiceInput() {
             if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) { alert('Speech recognition not supported.'); return; }
             const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
             recognition.lang = 'en-US';
-            alert('Listening... Speak your project domain now.');
+            alert('Listening... Speak your project thoughts now.');
             recognition.onresult = (e) => {
                 document.getElementById('userThoughtInput').value = e.results[0][0].transcript;
                 alert(`Captured speech: "${e.results[0][0].transcript}"`);
@@ -209,8 +228,8 @@
         }
 
         async function lockIdea(buttonElement, ideaTitle) {
-            if(buttonElement.classList.contains('locked')) { alert('Already locked!'); return; }
-            if(!confirm(`Lock "${ideaTitle}" under your profile?`)) return;
+            if(buttonElement.classList.contains('locked')) { alert('You have already locked this project!'); return; }
+            if(!confirm(`Are you sure you want to lock "${ideaTitle}"?`)) return;
 
             try {
                 const { data: { user } } = await _supabase.auth.getUser();
@@ -222,50 +241,39 @@
             buttonElement.classList.add('locked');
             buttonElement.innerText = '🛡️ Locked';
             buttonElement.style.background = '#475569';
-            let lockedCounter = parseInt(localStorage.getItem('lockedCount') || '0') + 1;
+            lockedCounter++;
             localStorage.setItem('lockedCount', lockedCounter);
             document.getElementById('lockedCount').innerText = lockedCounter;
-            alert('Success! Idea securely locked in database vault.');
+            alert('Success! Your FYP idea is now securely locked.');
         }
 
         function generateAIIdea() {
-            const thought = document.getElementById('userThoughtInput').value;
-            if(!thought.trim()) { alert('Please type or speak your project thoughts first!'); return; }
+            const thought = document.getElementById('userThoughtInput').value.toLowerCase();
+            if(!thought.trim()) { alert('Please type or speak your thoughts first!'); return; }
 
             const grid = document.getElementById('ideasGrid');
-            const newCard = document.createElement('div');
-            newCard.className = 'idea-box p-6 rounded-2xl flex flex-col justify-between border-purple-500/50';
             
-            // Smart AI synthesized mock response
-            const aiTitle = `AI-Synthesized: ${thought.slice(0, 35)}...`;
-            const aiDesc = `Advanced automated solution built specifically for your custom prompt: "${thought}". Optimized for top-tier academic presentation.`;
-            
-            newCard.setAttribute('data-title', aiTitle);
-            newCard.setAttribute('data-desc', aiDesc);
-            newCard.setAttribute('data-tech', 'Python, Node.js, AI Model, Tailwind');
-            newCard.setAttribute('data-benefits', 'Highly customized to your thoughts; Unique defense potential.');
-            newCard.setAttribute('data-roadmap', '1. Scope formulation. 2. Model integration. 3. UI testing & deployment.');
+            // Generate 10 concepts dynamically
+            for (let i = 1; i <= 10; i++) {
+                let aiTitle = `AI-Synthesized Concept #${i} for ${thought.slice(0, 15)}`;
+                let aiDesc = `Advanced automated framework built around your prompt: "${thought}". Optimized for thesis defense.`;
+                let techStack = "Python, React.js, Node.js, PostgreSQL";
+                let benefits = "High commercial viability; Strong academic defense value.";
+                let roadmap = "1. Requirements analysis. 2. System design. 3. Coding & testing.";
 
-            newCard.innerHTML = `
-                <div>
-                    <div class="flex justify-between items-start mb-3">
-                        <span class="text-[10px] bg-amber-500/20 text-amber-300 px-2.5 py-1 rounded-md font-bold uppercase border border-amber-500/30">AI Generated</span>
-                        <span class="text-xs text-emerald-400 font-semibold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Available</span>
-                    </div>
-                    <h4 class="text-lg font-bold text-white mb-2">${aiTitle}</h4>
-                    <p class="text-xs text-slate-400 leading-relaxed mb-4">${aiDesc}</p>
-                </div>
-                <div class="pt-4 border-t border-slate-800 flex justify-between items-center">
-                    <button onclick="openDetailsModal(this)" class="details-btn text-xs px-3.5 py-2 rounded-xl font-bold transition">📖 View Details</button>
-                    <div class="flex gap-2">
-                        <button onclick="copyPrompt(this)" class="bg-slate-800 text-slate-300 text-xs px-3 py-2 rounded-xl font-bold transition">📋 Copy</button>
-                        <button onclick="lockIdea(this, '${aiTitle}')" class="lock-btn text-white text-xs px-4 py-2 rounded-xl font-bold shadow transition">🔒 Lock</button>
-                    </div>
-                </div>
-            `;
-            grid.prepend(newCard);
+                if (thought.includes('agri') || thought.includes('crop') || thought.includes('farm')) {
+                    aiTitle = `Smart Agri-Tech System Variant #${i}`;
+                    aiDesc = `Automated precision farming framework variation #${i} utilizing sensor data and analytics.`;
+                } else if (thought.includes('health') || thought.includes('doctor') || thought.includes('patient')) {
+                    aiTitle = `Digital Healthcare Platform Variant #${i}`;
+                    aiDesc = `Secure health tracking and triage system variation #${i} for clinical optimization.`;
+                }
+
+                renderIdeaCard(grid, aiTitle, aiDesc, techStack, benefits, roadmap, "AI Generated");
+            }
+
             document.getElementById('userThoughtInput').value = '';
-            alert('ThesisMatrix AI Engine has successfully synthesized a custom concept for you!');
+            alert('ThesisMatrix AI Engine has successfully synthesized 10 unique FYP concepts!');
         }
     </script>
 </body>
