@@ -1,4 +1,10 @@
 {
-  "cleanUrls": true,
-  "trailingSlash": false
+  "cleanUrls": false,
+  "rewrites": [
+    { "source": "/signup", "destination": "/signup.html" },
+    { "source": "/login", "destination": "/login.html" },
+    { "source": "/fields", "destination": "/fields.html" },
+    { "source": "/dashboard", "destination": "/dashboard.html" },
+    { "source": "/about", "destination": "/about.html" }
+  ]
 }

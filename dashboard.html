@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - ThesisMatrix</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Supabase Library & Connection Bridge -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="supabase.js"></script>
     <style>
         body { background-color: #030712; color: #f8fafc; overflow-y: auto !important; }
         .cyber-card { background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(49, 27, 95, 0.85)); border: 1px solid rgba(129, 140, 248, 0.25); box-shadow: 0 25px 30px -10px rgba(0, 0, 0, 0.6); }
@@ -29,6 +26,7 @@
         <div class="flex items-center gap-4">
             <span id="userDeptBadge" class="text-xs bg-indigo-500/20 text-indigo-300 px-3 py-1.5 rounded-full border border-indigo-500/30 hidden md:inline-block">Loading Department...</span>
             <a href="fields.html" class="text-xs text-slate-300 hover:text-white bg-slate-800 px-3 py-2 rounded-xl border border-slate-700 transition">Change Dept</a>
+            <a href="about.html" class="text-xs text-slate-300 hover:text-white bg-slate-800 px-3 py-2 rounded-xl border border-slate-700 transition">About Us</a>
             <a href="index.html" class="text-xs text-red-400 hover:text-red-300 bg-red-500/10 px-3 py-2 rounded-xl border border-red-500/20 transition">Log Out</a>
         </div>
     </nav>
@@ -168,21 +166,10 @@
             };
             recognition.start();
         }
-        async function lockIdea(buttonElement, ideaTitle) {
+        function lockIdea(buttonElement, ideaTitle) {
             if(buttonElement.classList.contains('locked')) { alert('You have already locked this project!'); return; }
             const confirmLock = confirm(`Are you sure you want to lock "${ideaTitle}"?`);
             if(!confirmLock) return;
-
-            try {
-                const { data: { user } } = await _supabase.auth.getUser();
-                if (user) {
-                    await _supabase.from('locked_ideas').insert([{
-                        user_name: userName,
-                        idea_title: ideaTitle,
-                        department: userDept
-                    }]);
-                }
-            } catch (err) { console.error('Database lock error:', err); }
 
             buttonElement.classList.add('locked');
             buttonElement.innerText = '🛡️ Locked';
@@ -191,7 +178,7 @@
             lockedCounter++;
             localStorage.setItem('lockedCount', lockedCounter);
             document.getElementById('lockedCount').innerText = lockedCounter;
-            alert('Success! Your FYP idea is now securely locked in the database.');
+            alert('Success! Your FYP idea is now securely locked.');
         }
         function generateCustomIdea() {
             const thought = document.getElementById('userThoughtInput').value;
